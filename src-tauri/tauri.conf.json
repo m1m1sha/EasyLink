@@ -1,7 +1,7 @@
 {
-  "productName": "vite-vue-tauri-template",
+  "productName": "easy-link",
   "version": "0.0.0",
-  "identifier": "com.example.dev",
+  "identifier": "cn.smjb.link",
   "build": {
     "beforeDevCommand": "bun run dev",
     "devUrl": "http://localhost:1420",
@@ -11,7 +11,7 @@
   "app": {
     "windows": [
       {
-        "title": "vite-vue-tauri-template",
+        "title": "easy-link",
         "width": 800,
         "height": 600
       }

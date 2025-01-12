@@ -1,7 +1,7 @@
 [package]
-name = "vite-vue-tauri-template"
+name = "easy-link"
 version = "0.0.0"
-description = "A Vite Vue Tauri App"
+description = "easy to p2p link"
 authors = ["m1m1sha"]
 edition = "2021"
 
