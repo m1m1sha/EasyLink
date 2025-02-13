@@ -51,17 +51,17 @@ jobs:
 
           - platform: ubuntu-22.04
             target: x86_64-unknown-linux-gnu
-            args: ''
+            args: --target x86_64-unknown-linux-gnu
           - platform: ubuntu-22.04
             target: aarch64-unknown-linux-gnu
-            args: --bundles deb
+            args: --target aarch64-unknown-linux-gnu --bundles deb
 
           - platform: windows-latest
             target: x86_64-pc-windows-msvc
-            args: ''
+            args: --target x86_64-pc-windows-msvc
           - platform: windows-latest
             target: aarch64-pc-windows-msvc
-            args: ''
+            args: --target aarch64-pc-windows-msvc
     needs: pre_job
     if: needs.pre_job.outputs.should_skip != 'true'
     runs-on: ${{ matrix.platform }}
