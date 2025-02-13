@@ -1,13 +1,17 @@
 {
   "cSpell.words": [
     "antfu",
+    "armhf",
     "demi",
+    "dpkg",
     "dtolnay",
     "fkirc",
+    "gstreamer",
     "hanzi",
     "iconify",
     "intlify",
     "libappindicator",
+    "libgstreamer",
     "librsvg",
     "libwebkit",
     "libxdo",
