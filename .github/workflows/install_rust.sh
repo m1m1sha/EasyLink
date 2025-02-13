@@ -49,7 +49,7 @@ rustup install 1.84
 rustup default 1.84
 
 # mips/mipsel cannot add target from rustup, need compile by ourselves
-if [[ $platform =~ ^ubuntu.*$ && $TARGET =~ ^mips.*$ ]]; then
+if [[ $platform =~ ^ubuntu.*$ && $target =~ ^mips.*$ ]]; then
     cd "$PWD/musl_gcc/${MUSL_URI}-cross/lib/gcc/${MUSL_URI}/11.2.1" || exit 255
     # for panic-abort
     cp libgcc_eh.a libunwind.a
@@ -68,7 +68,7 @@ if [[ $platform =~ ^ubuntu.*$ && $TARGET =~ ^mips.*$ ]]; then
         cp -f $RUST_LIB_SRC/library/Cargo.lock $RUST_LIB_SRC/Cargo.lock
     fi
 else
-    rustup target add $TARGET
+    rustup target add $target
     if [[ $target != '' ]]; then
         rustup target add $target
     fi
