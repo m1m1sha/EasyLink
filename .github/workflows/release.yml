@@ -132,6 +132,9 @@ jobs:
           sudo apt install -f -o Dpkg::Options::="--force-overwrite" libwebkit2gtk-4.1-dev:arm64 libssl-dev:arm64 gcc-aarch64-linux-gnu
           echo "PKG_CONFIG_SYSROOT_DIR=/usr/aarch64-linux-gnu/" >> "$GITHUB_ENV"
           echo "PKG_CONFIG_PATH=/usr/lib/aarch64-linux-gnu/pkgconfig/" >> "$GITHUB_ENV"
+          if rustc +stable --version --verbose | grep -q '^release: 1\.7[01]\.'; then
+            echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV
+          fi
 
       - name: Tauri build
         uses: tauri-apps/tauri-action@v0
