@@ -44,32 +44,29 @@ jobs:
         include:
           - platform: macos-latest
             target: x86_64-apple-darwin
-            args: --target x86_64-apple-darwin
+            args:
           - platform: macos-latest
             target: aarch64-apple-darwin
-            args: --target aarch64-apple-darwin
+            args:
 
           - platform: ubuntu-22.04
             target: x86_64-unknown-linux-gnu
-            args: --target x86_64-unknown-linux-gnu
+            args:
           - platform: ubuntu-22.04
             target: aarch64-unknown-linux-gnu
-            args: --target aarch64-unknown-linux-gnu --bundles deb
+            args: --bundles deb
 
           - platform: windows-latest
             target: x86_64-pc-windows-msvc
-            args: --target x86_64-pc-windows-msvc
+            args:
           - platform: windows-latest
             target: aarch64-pc-windows-msvc
-            args: --target aarch64-pc-windows-msvc
+            args:
     needs: pre_job
     if: needs.pre_job.outputs.should_skip != 'true'
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup bun
-        uses: oven-sh/setup-bun@v2
 
       - name: Install Rust stable
         # run: bash ./.github/workflows/install_rust.sh
@@ -83,6 +80,9 @@ jobs:
         with:
           workspaces: ./src-tauri -> target
 
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v2
+
       - name: Install frontend dependencies
         # If you don't have `beforeBuildCommand` configured you may want to build your frontend here too.
         run: bun install # change this to npm or pnpm depending on which one you use.
@@ -93,47 +93,45 @@ jobs:
           # GitHub repo token to use to avoid rate limiter
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install dependencies (ubuntu && x86 only)
-        if: ${{ matrix.platform == 'ubuntu-22.04' &&  startsWith(matrix.target, 'x86') }}
+      - name: Install dependencies (ubuntu only)
+        if: ${{ startsWith(matrix.platform, 'ubuntu') }}
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+          if [[ $target =~ ^aarch64.*$ ]]; then
+            # see https://tauri.app/v1/guides/building/linux/
+            echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy main restricted" | sudo tee /etc/apt/sources.list
+            echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted" | sudo tee -a /etc/apt/sources.list
+            echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy universe" | sudo tee -a /etc/apt/sources.list
+            echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy-updates universe" | sudo tee -a /etc/apt/sources.list
+            echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy multiverse" | sudo tee -a /etc/apt/sources.list
+            echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy-updates multiverse" | sudo tee -a /etc/apt/sources.list
+            echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy-backports main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
+            echo "deb [arch=amd64] http://security.ubuntu.com/ubuntu/ jammy-security main restricted" | sudo tee -a /etc/apt/sources.list
+            echo "deb [arch=amd64] http://security.ubuntu.com/ubuntu/ jammy-security universe" | sudo tee -a /etc/apt/sources.list
+            echo "deb [arch=amd64] http://security.ubuntu.com/ubuntu/ jammy-security multiverse" | sudo tee -a /etc/apt/sources.list
 
-      - name: Install dependencies (ubuntu && aarch64 only)
-        if: ${{ matrix.platform == 'ubuntu-22.04' &&  startsWith(matrix.target, 'aarch64') }}
-        run: |
-          # see https://tauri.app/v1/guides/building/linux/
-          echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy main restricted" | sudo tee /etc/apt/sources.list
-          echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted" | sudo tee -a /etc/apt/sources.list
-          echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy universe" | sudo tee -a /etc/apt/sources.list
-          echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy-updates universe" | sudo tee -a /etc/apt/sources.list
-          echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy multiverse" | sudo tee -a /etc/apt/sources.list
-          echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy-updates multiverse" | sudo tee -a /etc/apt/sources.list
-          echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy-backports main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
-          echo "deb [arch=amd64] http://security.ubuntu.com/ubuntu/ jammy-security main restricted" | sudo tee -a /etc/apt/sources.list
-          echo "deb [arch=amd64] http://security.ubuntu.com/ubuntu/ jammy-security universe" | sudo tee -a /etc/apt/sources.list
-          echo "deb [arch=amd64] http://security.ubuntu.com/ubuntu/ jammy-security multiverse" | sudo tee -a /etc/apt/sources.list
+            echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports jammy main restricted" | sudo tee -a /etc/apt/sources.list
+            echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports jammy-updates main restricted" | sudo tee -a /etc/apt/sources.list
+            echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports jammy universe" | sudo tee -a /etc/apt/sources.list
+            echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports jammy-updates universe" | sudo tee -a /etc/apt/sources.list
+            echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports jammy multiverse" | sudo tee -a /etc/apt/sources.list
+            echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports jammy-updates multiverse" | sudo tee -a /etc/apt/sources.list
+            echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports jammy-backports main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
+            echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports jammy-security main restricted" | sudo tee -a /etc/apt/sources.list
+            echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports jammy-security universe" | sudo tee -a /etc/apt/sources.list
+            echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports jammy-security multiverse" | sudo tee -a /etc/apt/sources.list
 
-          echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports jammy main restricted" | sudo tee -a /etc/apt/sources.list
-          echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports jammy-updates main restricted" | sudo tee -a /etc/apt/sources.list
-          echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports jammy universe" | sudo tee -a /etc/apt/sources.list
-          echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports jammy-updates universe" | sudo tee -a /etc/apt/sources.list
-          echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports jammy multiverse" | sudo tee -a /etc/apt/sources.list
-          echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports jammy-updates multiverse" | sudo tee -a /etc/apt/sources.list
-          echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports jammy-backports main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
-          echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports jammy-security main restricted" | sudo tee -a /etc/apt/sources.list
-          echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports jammy-security universe" | sudo tee -a /etc/apt/sources.list
-          echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports jammy-security multiverse" | sudo tee -a /etc/apt/sources.list
+            sudo dpkg --add-architecture arm64
+            sudo apt-get update
+            sudo apt-get install -y libgstreamer1.0-0:arm64 gstreamer1.0-plugins-base:arm64 gstreamer1.0-plugins-good:arm64
+            sudo apt-get install -y libgstreamer-gl1.0-0:arm64 libgstreamer-plugins-base1.0-0:arm64 libgstreamer-plugins-good1.0-0:arm64 libwebkit2gtk-4.1-0:arm64
+            sudo apt install -f -o Dpkg::Options::="--force-overwrite" libwebkit2gtk-4.1-dev:arm64 libssl-dev:arm64 gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+            echo "PKG_CONFIG_SYSROOT_DIR=/usr/aarch64-linux-gnu/" >> "$GITHUB_ENV"
+            echo "PKG_CONFIG_PATH=/usr/lib/aarch64-linux-gnu/pkgconfig/" >> "$GITHUB_ENV"
+          elif [[ $target =~ ^x86_64.*$ ]]; then
+            sudo apt-get update
+            sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+          else
 
-          sudo dpkg --add-architecture arm64
-          sudo apt-get update
-          sudo apt-get install -y libgstreamer1.0-0:arm64 gstreamer1.0-plugins-base:arm64 gstreamer1.0-plugins-good:arm64
-          sudo apt-get install -y libgstreamer-gl1.0-0:arm64 libgstreamer-plugins-base1.0-0:arm64 libgstreamer-plugins-good1.0-0:arm64 libwebkit2gtk-4.1-0:arm64
-          sudo apt install -f -o Dpkg::Options::="--force-overwrite" libwebkit2gtk-4.1-dev:arm64 libssl-dev:arm64 gcc-aarch64-linux-gnu
-          echo "PKG_CONFIG_SYSROOT_DIR=/usr/aarch64-linux-gnu/" >> "$GITHUB_ENV"
-          echo "PKG_CONFIG_PATH=/usr/lib/aarch64-linux-gnu/pkgconfig/" >> "$GITHUB_ENV"
-          if rustc +stable --version --verbose | grep -q '^release: 1\.7[01]\.'; then
-            echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV
           fi
 
       - name: Tauri build
@@ -146,4 +144,4 @@ jobs:
           releaseBody: See the assets to download this version and install.
           releaseDraft: true
           prerelease: false
-          args: --verbose ${{ matrix.args }}
+          args: --verbose --target ${{ matrix.target }} ${{ matrix.args }}
