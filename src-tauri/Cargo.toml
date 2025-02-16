@@ -21,7 +21,11 @@ dashmap = "6.1.0"
 git-version = "0.3.9"
 
 easytier = { git = "https://github.com/EasyTier/EasyTier.git", tag = "v2.2.2" }
+tauri-plugin-process = "2"
 
 
 [target.'cfg(windows)'.dependencies]
 encoding_rs = { version = "0.8.35", features = ["fast-gb-hanzi-encode"] }
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-updater = "2"
