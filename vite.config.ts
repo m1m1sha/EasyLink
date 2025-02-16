@@ -4,7 +4,7 @@ import VueI18n from '@intlify/unplugin-vue-i18n/vite'
 import Vue from '@vitejs/plugin-vue'
 import Unocss from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
-import { } from 'unplugin-vue-components/resolvers'
+import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
 import VueMacros from 'unplugin-vue-macros/vite'
 import { VueRouterAutoImports } from 'unplugin-vue-router'
@@ -48,9 +48,18 @@ export default defineConfig(async () => ({
         {
           'vue-router/auto': ['useLink'],
         },
+        {
+          'naive-ui': [
+            'useDialog',
+            'useMessage',
+            'useNotification',
+            'useLoadingBar',
+          ],
+        },
       ],
       dts: 'src/auto-imports.d.ts',
       dirs: [
+        'src/components',
         'src/composables',
         'src/stores',
         'src/types',
@@ -61,7 +70,7 @@ export default defineConfig(async () => ({
     Components({
       extensions: ['vue', 'md'],
       include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
-      resolvers: [],
+      resolvers: [NaiveUiResolver()],
       dts: 'src/components.d.ts',
     }),
 

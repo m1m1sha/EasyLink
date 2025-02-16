@@ -3,4 +3,4 @@ export const useAppStore = defineStore('appStore', () => {
 })
 
 if (import.meta.hot)
-  import.meta.hot.accept(acceptHMRUpdate(useAppStore as any, import.meta.hot))
+  import.meta.hot.accept(acceptHMRUpdate(useAppStore, import.meta.hot))

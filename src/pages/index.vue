@@ -3,8 +3,9 @@
 
 <template>
   <div align-center h-full flex flex-col justify-center text-center>
-    <p>easy-link</p>
-    <p>{{ $t('hello') }}</p>
+    <n-button type="primary" mx-auto>
+      Link!
+    </n-button>
   </div>
 </template>
 
