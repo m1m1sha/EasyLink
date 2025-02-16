@@ -42,26 +42,30 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: macos-latest
-            target: x86_64-apple-darwin
-            args: ''
-          - platform: macos-latest
-            target: aarch64-apple-darwin
-            args: ''
+          # - platform: macos-latest
+          #   target: x86_64-apple-darwin
+          #   args: ''
+          # - platform: macos-latest
+          #   target: aarch64-apple-darwin
+          #   args: ''
 
-          - platform: ubuntu-22.04
-            target: x86_64-unknown-linux-gnu
-            args: ''
-          - platform: ubuntu-22.04
-            target: aarch64-unknown-linux-gnu
-            args: --bundles deb
+          # - platform: ubuntu-22.04
+          #   target: x86_64-unknown-linux-gnu
+          #   args: ''
+          # - platform: ubuntu-22.04
+          #   target: aarch64-unknown-linux-gnu
+          #   args: --bundles deb
 
           - platform: windows-latest
             target: x86_64-pc-windows-msvc
             args: ''
-          - platform: windows-latest
-            target: aarch64-pc-windows-msvc
-            args: ''
+          # - platform: windows-latest
+          #   target: aarch64-pc-windows-msvc
+          #   args: ''
+          # - platform: windows-latest
+          #   target: x86_64-pc-windows-msvc
+          #   build_target: x86_64-win7-windows-msvc
+          #   args: '-- -Z build-std'
     needs: pre_job
     if: needs.pre_job.outputs.should_skip != 'true'
     runs-on: ${{ matrix.platform }}
@@ -134,10 +138,10 @@ jobs:
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
       - name: Install dependencies (window 7 only)
-        if: ${{ startsWith(matrix.platform, 'windows') &&  startsWith(matrix.target, 'x86_64-win7') }}
+        if: ${{ startsWith(matrix.platform, 'windows') &&  startsWith(matrix.build_target, 'x86_64-win7') }}
         shell: powershell
         run: |
-          ./.github/workflows/win7.ps1 -projectName $env:GITHUB_REPOSITORY.Split('/')[1] -file .github/workflows/windows.0.48.5.lib
+          ./.github/workflows/win7.ps1 -file .github/workflows/windows.0.48.5.lib
 
       - name: Tauri build
         uses: tauri-apps/tauri-action@v0

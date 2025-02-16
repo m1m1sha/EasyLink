@@ -1,9 +1,9 @@
 
 param (
-  [string]$projectName,
   [string]$file
 )
 
+$projectName $env:GITHUB_REPOSITORY.Split('/')[1]
 # 设定源文件路径
 $sourceFile = "D:\a\$projectName\$projectName\$file"
 
