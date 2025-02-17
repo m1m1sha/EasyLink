@@ -45,7 +45,10 @@
         "https://ghproxy.net/https://github.com/m1m1sha/EasyLink/releases/latest/download/latest.json"
       ],
       "windows": {
-        "installMode": "passive"
+        "installMode": "passive",
+        "nsis": {
+          "displayLanguageSelector": true
+        }
       }
     }
   }

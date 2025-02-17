@@ -3,25 +3,34 @@
 
 use tauri::Manager;
 
-mod util;
-
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
+mod commands;
+mod constants;
+mod utils;
 
 fn main() {
-    tauri::Builder::default()
+    let app = tauri::Builder::default()
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
-        .plugin(tauri_plugin_shell::init())
-        .invoke_handler(tauri::generate_handler![greet])
-        .setup(|app| {
-            let window = app.get_webview_window("main").unwrap();
-            let _ = window.set_title(&format!("EasyLink {}", util::VERSION));
-            Ok(())
-        })
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .plugin(tauri_plugin_shell::init());
+
+    #[cfg(not(windows))]
+    {
+        use tauri_plugin_autostart::MacosLauncher;
+        app.plugin(tauri_plugin_autostart::init(
+            MacosLauncher::LaunchAgent,
+            Some(vec![constants::AUTOSTART]),
+        ));
+    }
+
+    app.invoke_handler(tauri::generate_handler![
+        commands::autostart,
+        commands::autostart_status,
+    ])
+    .setup(|app| {
+        let window = app.get_webview_window("main").unwrap();
+        let _ = window.set_title(&format!("EasyLink {}", constants::VERSION));
+        Ok(())
+    })
+    .run(tauri::generate_context!())
+    .expect("error while running tauri application");
 }

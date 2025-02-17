@@ -4,7 +4,7 @@
 
 <template>
   <n-layout h-full position="absolute">
-    <n-layout-content position="absolute" content-class="p-6">
+    <n-layout-content position="absolute" content-class="p-6" :native-scrollbar="false">
       <RouterView />
     </n-layout-content>
     <n-layout-footer position="absolute" bordered h-8>

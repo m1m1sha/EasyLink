@@ -7,6 +7,7 @@
       Link!
     </n-button>
   </div>
+  <Config />
 </template>
 
 <style scoped lang="postcss">
