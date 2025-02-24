@@ -28,7 +28,7 @@ tauri-plugin-process = "2"
 [target.'cfg(windows)'.dependencies]
 encoding_rs = { version = "0.8.35", features = ["fast-gb-hanzi-encode"] }
 planif = { git = "https://github.com/mattrobineau/planif", tag = "1.0.1" }
-windows = { version = "0.59.0", features = [
+windows = { version = "0.60.0", features = [
   "Win32_System_TaskScheduler",
   "Win32_System_Variant",
   "Win32_System_Power",
