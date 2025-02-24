@@ -42,7 +42,7 @@
     "naive-ui": "^2.41.0",
     "simple-git-hooks": "^2.11.1",
     "typescript": "^5.7.3",
-    "unocss": "^65.5.0",
+    "unocss": "^66.0.0",
     "unplugin-auto-import": "^19.1.0",
     "unplugin-vue-components": "^28.1.0",
     "unplugin-vue-macros": "^2.14.2",
